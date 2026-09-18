@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script id="mobile-patch-loader">
+  (function(){
+    function applyMobilePatch(){
+      var frame = document.querySelector('[data-om-starter="ios-frame"]');
+      if (!frame || frame.__mobilePatched) return;
+      frame.__mobilePatched = true;
+      var s = document.createElement('style');
+      s.id = 'mobile-patch-style';
+      s.textContent = [
+        '@media (max-width: 700px) {',
+        '  [data-om-starter="ios-frame"] { width:100vw !important; height:100dvh !important; border-radius:0 !important; box-shadow:none !important; }',
+        '  [data-om-starter="ios-frame"] > div:nth-child(1), [data-om-starter="ios-frame"] > div:nth-child(2) { display:none !important; }',
+        '}',
+        'html, body { margin:0 !important; padding:0 !important; background:#000 !important; }'
+      ].join('\n');
+      document.head.appendChild(s);
+      var vp = document.querySelector('meta[name="viewport"]');
+      if (!vp) { vp = document.createElement('meta'); vp.setAttribute('name','viewport'); document.head.appendChild(vp); }
+      vp.setAttribute('content','width=device-width, initial-scale=1, viewport-fit=cover');
+    }
+    new MutationObserver(applyMobilePatch).observe(document, {childList:true, subtree:true});
+    applyMobilePatch();
+  })();
+  </script>
   <meta charset="utf-8">
   <title>딱끔 — 청소년 도박 예방</title>
   <style>
